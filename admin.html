@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panel de Control - -Sinfonia Guatemalteca</title>
+  <link rel="stylesheet" href="CSS/admin.css">
+</head>
+<body class="admin-page">
+
+  <div class="container" style="padding-top: 2rem; padding-bottom: 5rem;">
+    
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+      <div>
+        <button class="btn btn-secondary" onclick="window.location.href='events.html'" style="margin-bottom: 0.5rem;">
+          Volver a eventos
+        </button>
+        <h1 style="font-size: 1.8rem; font-weight: 800; color: #111827;">Panel de Administración</h1>
+      </div>
+      <button class="btn btn-primary" onclick="openAddModal()">Crear Nuevo Evento</button>
+    </div>
+
+
+    <nav style="display: flex; gap: 1rem; margin-bottom: 2rem; border-bottom: 1px solid #e5e7eb; padding-bottom: 1rem;">
+      <button class="btn btn-secondary" onclick="document.getElementById('section-events').scrollIntoView({behavior:'smooth'})">Gestión de Eventos</button>
+      <button class="btn btn-secondary" onclick="document.getElementById('section-sales').scrollIntoView({behavior:'smooth'})">Reporte de Ventas</button>
+      <button class="btn btn-secondary" onclick="document.getElementById('section-config').scrollIntoView({behavior:'smooth'})">Configuración</button>
+    </nav>
+
+    <section id="section-events" style="margin-bottom: 3rem;">
+      <h2 style="font-size: 1.25rem; margin-bottom: 1rem; color: #374151;">Eventos Disponibles</h2>
+      <div class="admin-table-container card">
+        <table>
+          <thead>
+            <tr>
+              <th>Evento</th>
+              <th>Ciudad</th>
+              <th>Precio</th>
+              <th>Tickets</th>
+              <th>Estado</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody id="eventsTableBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="section-sales" style="margin-bottom: 3rem;">
+      <h2 style="font-size: 1.25rem; margin-bottom: 1rem; color: #374151;">Resumen de Ventas</h2>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
+        <div class="card stat-card">
+          <p class="stat-label">Ingresos Totales</p>
+          <h3 id="totalSalesAmount" class="stat-value">Q0.00</h3>
+        </div>
+        <div class="card stat-card">
+          <p class="stat-label">Tickets Vendidos</p>
+          <h3 id="totalTicketsSold" class="stat-value">0</h3>
+        </div>
+      </div>
+      <tbody id="salesTableBody"></tbody>
+    </section>
+
+    <section id="section-config">
+        <h2 style="font-size: 1.25rem; margin-bottom: 1rem; color: #374151;">Parámetros del Sistema</h2>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+          <div class="card config-box">
+            <h3>Categorías</h3>
+            <div class="config-input-group">
+              <input type="text" id="newCategoryInput" class="input" placeholder="Nombre">
+              <button class="btn btn-primary" onclick="addCategory()">+</button>
+            </div>
+            <div id="categoriesList" class="config-list"></div>
+          </div>
+          <div class="card config-box">
+            <h3>Ciudades</h3>
+            <div class="config-input-group">
+              <input type="text" id="newCityInput" class="input" placeholder="Nombre">
+              <button class="btn btn-primary" onclick="addCity()">+</button>
+            </div>
+            <div id="citiesList" class="config-list"></div>
+          </div>
+        </div>
+    </section>
+  </div>
+
+  <div id="addModal" class="modal" style="display: none;">
+    <div class="modal-content">
+      <h2>Nuevo Registro de Evento</h2>
+      <form onsubmit="handleAddEvent(event)">
+        <div style="margin-bottom: 1rem;">
+          <label>Título</label>
+          <input type="text" id="addName" class="input" required>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+          <div>
+            <label>Ubicación</label>
+            <select id="addCity" class="select" required></select>
+          </div>
+          <div>
+            <label>Categoría</label>
+            <select id="addCategory" class="select" required></select>
+          </div>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem;">
+          <div>
+            <label>Precio (Q)</label>
+            <input type="number" id="addPrice" class="input" step="0.01" required>
+          </div>
+          <div>
+            <label>Tickets</label>
+            <input type="number" id="addTickets" class="input" required>
+          </div>
+        </div>
+        <div style="margin-top: 1rem;">
+          <label>URL Imagen</label>
+          <input type="url" id="addImageUrl" class="input" required>
+        </div>
+        <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+          <button type="submit" class="btn btn-primary" style="flex: 2;">Guardar</button>
+          <button type="button" class="btn btn-secondary" style="flex: 1;" onclick="closeAddModal()">Cancelar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="JS/admin.js"></script>
+</body>
+</html>
