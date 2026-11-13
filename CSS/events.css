@@ -234,3 +234,8 @@ body {
         gap: 1rem;
     }
 }
+.event-count {
+    margin: 1rem 0;
+    color: #6b7280;
+    font-size: 0.875rem;
+}
