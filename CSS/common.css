@@ -1,0 +1,94 @@
+/* Estilos compartidos por todas las vistas. Se cargan antes del CSS de cada página. */
+
+.hidden {
+    display: none !important;
+}
+
+/* Foco visible para navegación con teclado */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible {
+    outline: 3px solid #f0abfc;
+    outline-offset: 2px;
+}
+
+button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none !important;
+}
+
+/* Insignias */
+.badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 700;
+}
+
+.badge-purple { background: #f3e8ff; color: #7e22ce; }
+.badge-green  { background: #dcfce7; color: #166534; }
+.badge-red    { background: #fee2e2; color: #991b1b; }
+
+/* Avisos temporales (reemplazan alert) */
+.notifications {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    z-index: 2000;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    max-width: min(360px, calc(100vw - 2rem));
+}
+
+.toast {
+    padding: 0.875rem 1rem;
+    border-radius: 10px;
+    background: #ffffff;
+    color: #1f2937;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    border-left: 5px solid #9333ea;
+    font-size: 0.9rem;
+    animation: toast-in 0.25s ease-out;
+}
+
+.toast--success { border-left-color: #16a34a; }
+.toast--error   { border-left-color: #dc2626; }
+.toast--info    { border-left-color: #9333ea; }
+
+@keyframes toast-in {
+    from { opacity: 0; transform: translateY(-8px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Mensajes de error dentro de formularios */
+.form-error {
+    color: #b91c1c;
+    font-size: 0.85rem;
+    margin: -0.5rem 0 1rem;
+}
+
+/* Enlaces con apariencia de botón */
+a.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    text-decoration: none;
+}
+
+/* Texto solo para lectores de pantalla */
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}

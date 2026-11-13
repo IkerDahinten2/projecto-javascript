@@ -4,84 +4,91 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Carrito - Sinfonía Guatemalteca</title>
+  <link rel="stylesheet" href="CSS/common.css">
   <link rel="stylesheet" href="CSS/cart.css">
 </head>
 <body>
 
-  <div class="container" style="padding-top: 2rem; max-width: 800px;">
-    
-    <button type="button" class="btn btn-secondary" onclick="window.location.href='events.html'" style="margin-bottom: 1.5rem;">
-      Volver a eventos
-    </button>
-    
-    <div class="card">
-      <div style="padding: 1.5rem; border-bottom: 1px solid #f3f4f6;">
-        <h2 style="font-size: 1.25rem; font-weight: 700;">Tu Carrito</h2>
-        <p id="itemCount" style="color: #6b7280; font-size: 0.875rem;"></p>
-      </div>
+  <main class="container cart-container">
 
+    <a class="btn btn-secondary back-link" href="events.html">Volver a eventos</a>
+
+    <section class="card">
+      <div class="cart-header">
+        <h2>Tu Carrito</h2>
+        <p id="itemCount" class="cart-header__count"></p>
+      </div>
 
       <div id="cartItems"></div>
 
-
-      <div id="emptyCart" class="hidden" style="padding: 3rem; text-align: center;">
-        <p style="color: #6b7280; margin-bottom: 1rem;">Tu carrito está vacío</p>
-        <button type="button" class="btn btn-primary" onclick="window.location.href='events.html'">
-          Explorar Eventos
-        </button>
+      <div id="emptyCart" class="hidden empty-cart">
+        <p>Tu carrito está vacío</p>
+        <a class="btn btn-primary" href="events.html">Explorar Eventos</a>
       </div>
 
-
-      <div id="cartSummary" class="hidden" style="padding: 1.5rem; background: #f9fafb; border-top: 1px solid #f3f4f6;">
-        <div style="display: flex; justify-content: space-between; margin-bottom: 1.5rem;">
-          <span style="font-weight: 700;">Total a pagar:</span>
-          <span id="cartTotal" style="color: #9333ea; font-weight: 700; font-size: 1.25rem;">Q0.00</span>
+      <div id="cartSummary" class="hidden cart-summary">
+        <div class="cart-summary__row">
+          <span class="cart-summary__label">Total a pagar:</span>
+          <span id="cartTotal" class="cart-summary__total">Q0.00</span>
         </div>
-
-        <button type="button" class="btn btn-primary" style="width: 100%; padding: 1rem;" onclick="openPaymentModal()">
-          Proceder al Pago
-        </button>
+        <button type="button" id="checkoutBtn" class="btn btn-primary btn-block">Proceder al Pago</button>
       </div>
-    </div>
-  </div>
+    </section>
+  </main>
 
-
-  <div id="paymentModal" class="payment-modal">
+  <div id="paymentModal" class="payment-modal" role="dialog" aria-modal="true" aria-labelledby="paymentTitle">
     <div class="payment-content">
-      <h2 style="margin-bottom: 1.5rem; font-weight: 700;">Finalizar Compra</h2>
+      <h2 id="paymentTitle" class="payment-title">Finalizar Compra</h2>
+      <p class="payment-note">Pago simulado: los datos de la tarjeta se validan pero nunca se guardan.</p>
 
-      <form id="paymentForm" onsubmit="handleCheckout(event)">
+      <form id="paymentForm" novalidate>
         <div class="form-grid">
           <div class="full-width">
-            <label>Nombre en la Tarjeta</label>
-            <input type="text" name="cardName" class="input" required>
+            <label for="cardName">Nombre en la tarjeta</label>
+            <input type="text" id="cardName" name="cardName" class="input" autocomplete="cc-name" required>
           </div>
           <div class="full-width">
-            <label>Número de Tarjeta</label>
-            <input type="text" name="cardNumber" class="input" maxlength="19" placeholder="0000 0000 0000 0000" required>
+            <label for="cardNumber">Número de tarjeta</label>
+            <input type="text" id="cardNumber" name="cardNumber" class="input" inputmode="numeric"
+                   autocomplete="cc-number" maxlength="23" placeholder="0000 0000 0000 0000" required>
           </div>
           <div>
-            <label>DPI / NIT</label>
-            <input type="text" name="userId" class="input" required>
+            <label for="cardExpiry">Vencimiento (MM/AA)</label>
+            <input type="text" id="cardExpiry" name="cardExpiry" class="input" inputmode="numeric"
+                   autocomplete="cc-exp" maxlength="5" placeholder="MM/AA" required>
           </div>
           <div>
-            <label>Teléfono</label>
-            <input type="tel" name="userPhone" class="input" required>
+            <label for="cardCvv">CVV</label>
+            <input type="password" id="cardCvv" name="cardCvv" class="input" inputmode="numeric"
+                   autocomplete="cc-csc" maxlength="4" required>
+          </div>
+          <div>
+            <label for="userDoc">DPI / NIT</label>
+            <input type="text" id="userDoc" name="userDoc" class="input" required>
+          </div>
+          <div>
+            <label for="userPhone">Teléfono</label>
+            <input type="tel" id="userPhone" name="userPhone" class="input" inputmode="numeric"
+                   autocomplete="tel" placeholder="5555 5555" required>
           </div>
           <div class="full-width">
-            <label>Correo Electrónico</label>
-            <input type="email" name="userEmail" class="input" required>
+            <label for="userEmail">Correo electrónico</label>
+            <input type="email" id="userEmail" name="userEmail" class="input" autocomplete="email" required>
           </div>
         </div>
 
-        <div style="display: flex; gap: 1rem; margin-top: 2rem;">
-          <button type="submit" class="btn btn-primary" style="flex: 2;">Confirmar Pago</button>
-          <button type="button" class="btn btn-secondary" style="flex: 1;" onclick="closePaymentModal()">Cancelar</button>
+        <p id="paymentError" class="form-error hidden payment-error" role="alert"></p>
+
+        <div class="modal-actions">
+          <button type="submit" class="btn btn-primary modal-actions__main">Confirmar Pago</button>
+          <button type="button" id="cancelPaymentBtn" class="btn btn-secondary modal-actions__secondary">Cancelar</button>
         </div>
       </form>
     </div>
   </div>
 
-  <script src="JS/cart.js"></script>
+  <script src="JS/utils.js" defer></script>
+  <script src="JS/store.js" defer></script>
+  <script src="JS/cart.js" defer></script>
 </body>
 </html>

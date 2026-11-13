@@ -2,66 +2,73 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Ticket-Mania</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ticket-Mania | Iniciar sesión</title>
+  <link rel="stylesheet" href="CSS/common.css">
   <link rel="stylesheet" href="CSS/index.css">
 </head>
 
 <body>
 
-<div class="login-card">
+<main class="login-card">
 
-
-  <div class="left">
-    <h1>Welcome back!</h1>
+  <section class="left">
+    <h1>¡Bienvenido de nuevo!</h1>
     <p>Descubre los mejores conciertos y eventos de Guatemala</p>
-  </div>
+  </section>
 
-  
-  <div class="right">
+  <section class="right">
 
     <h2 id="title">Iniciar Sesión</h2>
 
-    <div class="tabs">
-      <button class="tab active" onclick="login()">Iniciar</button>
-      <button class="tab" onclick="register()">Crear</button>
+    <div class="tabs" role="tablist">
+      <button type="button" class="tab active" role="tab" aria-selected="true" aria-controls="loginForm" data-tab="login">Iniciar</button>
+      <button type="button" class="tab" role="tab" aria-selected="false" aria-controls="registerForm" data-tab="register">Crear</button>
     </div>
 
+    <form id="loginForm" novalidate>
+      <div class="form-group">
+        <label for="loginEmail">Correo electrónico</label>
+        <input type="email" id="loginEmail" placeholder="correo@ejemplo.com" autocomplete="email" required>
+      </div>
+      <div class="form-group">
+        <label for="loginPassword">Contraseña</label>
+        <input type="password" id="loginPassword" placeholder="••••••••" autocomplete="current-password" required>
+      </div>
+      <p id="loginError" class="form-error hidden" role="alert"></p>
+      <button type="submit" class="btn">Iniciar Sesión</button>
 
-    <form id="loginForm" onsubmit="handleLogin(event)">
-        <div class="form-group">
-          <label for="loginEmail">Correo Electrónico</label>
-          <input type="email" id="loginEmail" class="input" placeholder="correo@ejemplo.com" required>
-        </div>
-        <div class="form-group">
-          <label for="loginPassword">Contraseña</label>
-          <input type="password" id="loginPassword" class="input" placeholder="••••••••" required>
-        </div>
-        <button type="submit" class="btn btn-primary btn-full">
-          Iniciar Sesión
-        </button>
-        
-        <div class="info-box">
-          <p style="font-weight: 600; margin-bottom: 0.5rem;">
-            Cuentas de prueba:
-          </p>
-          <p><strong>Admin:</strong> admin@eventos.gt / admin123</p>
-          <p><strong>Usuario:</strong> usuario@eventos.gt / user123</p>
-        </div>
-      </form>
+      <div class="info-box">
+        <p class="info-box__title">Cuentas de prueba:</p>
+        <p><strong>Admin:</strong> admin@eventos.gt / admin123</p>
+        <p><strong>Usuario:</strong> usuario@eventos.gt / user123</p>
+      </div>
+    </form>
 
-
-    <form id="registerForm" class="hidden">
-      <input type="text" placeholder="Nombre completo">
-      <input type="email" placeholder="Correo electrónico">
-      <input type="password" placeholder="Contraseña">
-
+    <form id="registerForm" class="hidden" novalidate>
+      <div class="form-group">
+        <label for="registerName">Nombre completo</label>
+        <input type="text" id="registerName" autocomplete="name" minlength="3" required>
+      </div>
+      <div class="form-group">
+        <label for="registerEmail">Correo electrónico</label>
+        <input type="email" id="registerEmail" autocomplete="email" required>
+      </div>
+      <div class="form-group">
+        <label for="registerPassword">Contraseña (mínimo 8 caracteres)</label>
+        <input type="password" id="registerPassword" autocomplete="new-password" minlength="8" required>
+      </div>
+      <p id="registerError" class="form-error hidden" role="alert"></p>
       <button type="submit" class="btn">Crear Cuenta</button>
     </form>
 
-  </div>
+  </section>
 
-</div>
-<script src="JS/auth.js"></script>
+</main>
+
+<script src="JS/utils.js" defer></script>
+<script src="JS/store.js" defer></script>
+<script src="JS/auth.js" defer></script>
 
 </body>
 </html>

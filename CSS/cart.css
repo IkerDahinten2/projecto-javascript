@@ -158,3 +158,127 @@ label {
 .hidden {
     display: none !important;
 }
+/* 8. CLASES QUE REEMPLAZAN ESTILOS EN LÍNEA */
+.cart-container {
+    padding-top: 2rem;
+    max-width: 800px;
+}
+
+.back-link {
+    margin-bottom: 1.5rem;
+}
+
+.cart-header {
+    padding: 1.5rem;
+    border-bottom: 1px solid #f3f4f6;
+}
+
+.cart-header h2 {
+    font-size: 1.25rem;
+    font-weight: 700;
+}
+
+.cart-header__count {
+    color: #6b7280;
+    font-size: 0.875rem;
+}
+
+.cart-item__info {
+    flex: 1;
+    margin-left: 1rem;
+}
+
+.cart-item__name {
+    font-size: 1rem;
+    margin: 0;
+}
+
+.cart-item__meta {
+    color: #666;
+    font-size: 0.8rem;
+}
+
+.cart-item__problem {
+    color: #b91c1c;
+    font-size: 0.8rem;
+    font-weight: 600;
+    margin-top: 4px;
+}
+
+.cart-item--blocked {
+    background: #fef2f2;
+}
+
+.cart-item__actions {
+    text-align: right;
+}
+
+.cart-item__total {
+    font-weight: 700;
+}
+
+.empty-cart {
+    padding: 3rem;
+    text-align: center;
+}
+
+.empty-cart p {
+    color: #6b7280;
+    margin-bottom: 1rem;
+}
+
+.cart-summary {
+    padding: 1.5rem;
+    background: #f9fafb;
+    border-top: 1px solid #f3f4f6;
+}
+
+.cart-summary__row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+}
+
+.cart-summary__label {
+    font-weight: 700;
+}
+
+.cart-summary__total {
+    color: #9333ea;
+    font-weight: 700;
+    font-size: 1.25rem;
+}
+
+.btn-block {
+    width: 100%;
+    padding: 1rem;
+}
+
+.payment-title {
+    margin-bottom: 0.5rem;
+    font-weight: 700;
+}
+
+.payment-note {
+    color: #6b7280;
+    font-size: 0.8rem;
+    margin-bottom: 1.25rem;
+}
+
+.payment-error {
+    margin: 0.5rem 0 0;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.modal-actions__main { flex: 2; }
+.modal-actions__secondary { flex: 1; }
+
+@media (max-width: 520px) {
+    .form-grid { grid-template-columns: 1fr; }
+    .full-width { grid-column: auto; }
+}
