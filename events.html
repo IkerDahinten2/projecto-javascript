@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Eventos - Sinfonia Guatemalteca</title>
+  <link rel="stylesheet" href="CSS/events.css">
+</head>
+<body class="events-page">
+
+  <header class="header">
+    <div class="container header-content">
+      <div class="logo">
+        <div class="logo-icon">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
+            <line x1="8" y1="21" x2="16" y2="21"/>
+            <line x1="12" y1="17" x2="12" y2="21"/>
+          </svg>
+        </div>
+        <h1>Sinfonia Guatemalteca</h1>
+      </div>
+      <div class="header-actions">
+        <div class="user-info">
+          <span id="userName">Usuario</span>
+          <span id="userBadge"></span>
+        </div>
+        <button id="adminBtn" class="btn btn-secondary hidden" onclick="window.location.href='admin.html'">
+          Panel Admin
+        </button>
+        <button class="btn btn-secondary" onclick="window.location.href='cart.html'">
+          🛒 Carrito (<span id="cartCount">0</span>)
+        </button>
+        <button class="btn btn-secondary" onclick="handleLogout()">Salir</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="filters">
+    <div class="container">
+      <div class="filters-grid">
+        <div class="search-input">
+          <input type="text" id="searchInput" class="input" placeholder="Buscar eventos..." oninput="filterEvents()">
+        </div>
+        <select id="cityFilter" class="select" onchange="filterEvents()">
+          <option value="Todas">Todas las ciudades</option>
+        </select>
+        <select id="categoryFilter" class="select" onchange="filterEvents()">
+          <option value="Todas">Todas las categorías</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <p id="eventCount" style="margin: 1rem 0; color: #6b7280; font-size: 0.875rem;"></p>
+    
+
+    <div id="eventsGrid" class="events-grid"></div>
+    
+    <div id="noEvents" class="empty-state hidden">
+      <p>No se encontraron eventos. Intenta cambiar los filtros.</p>
+    </div>
+  </div>
+
+  <script src="JS/events.js"></script>
+</body>
+</html>
