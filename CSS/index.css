@@ -6,7 +6,8 @@
     }
 
     body{
-      height:100vh;
+      min-height:100vh;
+      padding:20px;
       background: linear-gradient(135deg,#9333ea,#db2777);
       display:flex;
       align-items:center;
@@ -96,6 +97,29 @@
 
     .hidden{
       display:none;
+    }
+
+    label{
+      display:block;
+      font-size:0.875rem;
+      font-weight:600;
+      margin-bottom:6px;
+      color:#374151;
+    }
+
+    .info-box{
+      margin-top:20px;
+      padding:14px;
+      border-radius:10px;
+      background:#faf5ff;
+      font-size:0.85rem;
+      color:#4b5563;
+      line-height:1.6;
+    }
+
+    .info-box__title{
+      font-weight:600;
+      margin-bottom:0.5rem;
     }
 
     @media(max-width:768px){

@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Eventos - Sinfonia Guatemalteca</title>
+  <title>Eventos - Sinfonía Guatemalteca</title>
+  <link rel="stylesheet" href="CSS/common.css">
   <link rel="stylesheet" href="CSS/events.css">
 </head>
 <body class="events-page">
@@ -11,28 +12,24 @@
   <header class="header">
     <div class="container header-content">
       <div class="logo">
-        <div class="logo-icon">
+        <div class="logo-icon" aria-hidden="true">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <rect x="2" y="3" width="20" height="14" rx="2" ry="2"/>
             <line x1="8" y1="21" x2="16" y2="21"/>
             <line x1="12" y1="17" x2="12" y2="21"/>
           </svg>
         </div>
-        <h1>Sinfonia Guatemalteca</h1>
+        <h1>Sinfonía Guatemalteca</h1>
       </div>
-      <div class="header-actions">
+      <nav class="header-actions" aria-label="Acciones de usuario">
         <div class="user-info">
           <span id="userName">Usuario</span>
           <span id="userBadge"></span>
         </div>
-        <button id="adminBtn" class="btn btn-secondary hidden" onclick="window.location.href='admin.html'">
-          Panel Admin
-        </button>
-        <button class="btn btn-secondary" onclick="window.location.href='cart.html'">
-          🛒 Carrito (<span id="cartCount">0</span>)
-        </button>
-        <button class="btn btn-secondary" onclick="handleLogout()">Salir</button>
-      </div>
+        <a id="adminBtn" class="btn btn-secondary hidden" href="admin.html">Panel Admin</a>
+        <a class="btn btn-secondary" href="cart.html">🛒 Carrito (<span id="cartCount">0</span>)</a>
+        <button type="button" id="logoutBtn" class="btn btn-secondary">Salir</button>
+      </nav>
     </div>
   </header>
 
@@ -40,29 +37,29 @@
     <div class="container">
       <div class="filters-grid">
         <div class="search-input">
-          <input type="text" id="searchInput" class="input" placeholder="Buscar eventos..." oninput="filterEvents()">
+          <label for="searchInput" class="visually-hidden">Buscar eventos</label>
+          <input type="search" id="searchInput" class="input" placeholder="Buscar eventos...">
         </div>
-        <select id="cityFilter" class="select" onchange="filterEvents()">
-          <option value="Todas">Todas las ciudades</option>
-        </select>
-        <select id="categoryFilter" class="select" onchange="filterEvents()">
-          <option value="Todas">Todas las categorías</option>
-        </select>
+        <label for="cityFilter" class="visually-hidden">Ciudad</label>
+        <select id="cityFilter" class="select"></select>
+        <label for="categoryFilter" class="visually-hidden">Categoría</label>
+        <select id="categoryFilter" class="select"></select>
       </div>
     </div>
   </div>
 
-  <div class="container">
-    <p id="eventCount" style="margin: 1rem 0; color: #6b7280; font-size: 0.875rem;"></p>
-    
+  <main class="container">
+    <p id="eventCount" class="event-count" aria-live="polite"></p>
 
     <div id="eventsGrid" class="events-grid"></div>
-    
+
     <div id="noEvents" class="empty-state hidden">
       <p>No se encontraron eventos. Intenta cambiar los filtros.</p>
     </div>
-  </div>
+  </main>
 
-  <script src="JS/events.js"></script>
+  <script src="JS/utils.js" defer></script>
+  <script src="JS/store.js" defer></script>
+  <script src="JS/events.js" defer></script>
 </body>
 </html>

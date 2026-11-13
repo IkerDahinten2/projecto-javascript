@@ -3,42 +3,44 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Panel de Control - -Sinfonia Guatemalteca</title>
+  <title>Panel de Control - Sinfonía Guatemalteca</title>
+  <link rel="stylesheet" href="CSS/common.css">
   <link rel="stylesheet" href="CSS/admin.css">
 </head>
 <body class="admin-page">
 
-  <div class="container" style="padding-top: 2rem; padding-bottom: 5rem;">
-    
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+  <main class="container admin-container">
+
+    <div class="admin-header">
       <div>
-        <button class="btn btn-secondary" onclick="window.location.href='events.html'" style="margin-bottom: 0.5rem;">
-          Volver a eventos
-        </button>
-        <h1 style="font-size: 1.8rem; font-weight: 800; color: #111827;">Panel de Administración</h1>
+        <a class="btn btn-secondary back-link" href="events.html">Volver a eventos</a>
+        <h1 class="admin-title">Panel de Administración</h1>
       </div>
-      <button class="btn btn-primary" onclick="openAddModal()">Crear Nuevo Evento</button>
+      <div class="admin-header__actions">
+        <button type="button" id="newEventBtn" class="btn btn-primary">Crear Nuevo Evento</button>
+        <button type="button" id="logoutBtn" class="btn btn-secondary">Salir</button>
+      </div>
     </div>
 
-
-    <nav style="display: flex; gap: 1rem; margin-bottom: 2rem; border-bottom: 1px solid #e5e7eb; padding-bottom: 1rem;">
-      <button class="btn btn-secondary" onclick="document.getElementById('section-events').scrollIntoView({behavior:'smooth'})">Gestión de Eventos</button>
-      <button class="btn btn-secondary" onclick="document.getElementById('section-sales').scrollIntoView({behavior:'smooth'})">Reporte de Ventas</button>
-      <button class="btn btn-secondary" onclick="document.getElementById('section-config').scrollIntoView({behavior:'smooth'})">Configuración</button>
+    <nav class="admin-nav" aria-label="Secciones del panel">
+      <a class="btn btn-secondary" href="#section-events">Gestión de Eventos</a>
+      <a class="btn btn-secondary" href="#section-sales">Reporte de Ventas</a>
+      <a class="btn btn-secondary" href="#section-config">Configuración</a>
     </nav>
 
-    <section id="section-events" style="margin-bottom: 3rem;">
-      <h2 style="font-size: 1.25rem; margin-bottom: 1rem; color: #374151;">Eventos Disponibles</h2>
+    <section id="section-events" class="admin-section">
+      <h2 class="section-title">Eventos</h2>
       <div class="admin-table-container card">
         <table>
           <thead>
             <tr>
-              <th>Evento</th>
-              <th>Ciudad</th>
-              <th>Precio</th>
-              <th>Tickets</th>
-              <th>Estado</th>
-              <th>Acciones</th>
+              <th scope="col">Evento</th>
+              <th scope="col">Fecha</th>
+              <th scope="col">Ciudad</th>
+              <th scope="col">Precio</th>
+              <th scope="col">Tickets</th>
+              <th scope="col">Estado</th>
+              <th scope="col">Acciones</th>
             </tr>
           </thead>
           <tbody id="eventsTableBody"></tbody>
@@ -46,84 +48,116 @@
       </div>
     </section>
 
-    <section id="section-sales" style="margin-bottom: 3rem;">
-      <h2 style="font-size: 1.25rem; margin-bottom: 1rem; color: #374151;">Resumen de Ventas</h2>
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
+    <section id="section-sales" class="admin-section">
+      <h2 class="section-title">Resumen de Ventas</h2>
+      <div class="stats-grid">
         <div class="card stat-card">
           <p class="stat-label">Ingresos Totales</p>
-          <h3 id="totalSalesAmount" class="stat-value">Q0.00</h3>
+          <p id="totalSalesAmount" class="stat-value">Q0.00</p>
         </div>
         <div class="card stat-card">
           <p class="stat-label">Tickets Vendidos</p>
-          <h3 id="totalTicketsSold" class="stat-value">0</h3>
+          <p id="totalTicketsSold" class="stat-value">0</p>
         </div>
       </div>
-      <tbody id="salesTableBody"></tbody>
+      <div class="admin-table-container card">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Fecha</th>
+              <th scope="col">Cliente</th>
+              <th scope="col">Detalle</th>
+              <th scope="col">Total</th>
+            </tr>
+          </thead>
+          <tbody id="salesTableBody"></tbody>
+        </table>
+      </div>
     </section>
 
-    <section id="section-config">
-        <h2 style="font-size: 1.25rem; margin-bottom: 1rem; color: #374151;">Parámetros del Sistema</h2>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
-          <div class="card config-box">
-            <h3>Categorías</h3>
-            <div class="config-input-group">
-              <input type="text" id="newCategoryInput" class="input" placeholder="Nombre">
-              <button class="btn btn-primary" onclick="addCategory()">+</button>
-            </div>
-            <div id="categoriesList" class="config-list"></div>
-          </div>
-          <div class="card config-box">
-            <h3>Ciudades</h3>
-            <div class="config-input-group">
-              <input type="text" id="newCityInput" class="input" placeholder="Nombre">
-              <button class="btn btn-primary" onclick="addCity()">+</button>
-            </div>
-            <div id="citiesList" class="config-list"></div>
-          </div>
+    <section id="section-config" class="admin-section">
+      <h2 class="section-title">Parámetros del Sistema</h2>
+      <div class="config-grid">
+        <div class="card config-box">
+          <h3>Categorías</h3>
+          <form class="config-input-group" data-param="categories">
+            <label for="newCategoryInput" class="visually-hidden">Nueva categoría</label>
+            <input type="text" id="newCategoryInput" class="input" placeholder="Nombre" maxlength="40" required>
+            <button type="submit" class="btn btn-primary" aria-label="Agregar categoría">+</button>
+          </form>
+          <div id="categoriesList" class="config-list"></div>
         </div>
+        <div class="card config-box">
+          <h3>Ciudades</h3>
+          <form class="config-input-group" data-param="cities">
+            <label for="newCityInput" class="visually-hidden">Nueva ciudad</label>
+            <input type="text" id="newCityInput" class="input" placeholder="Nombre" maxlength="40" required>
+            <button type="submit" class="btn btn-primary" aria-label="Agregar ciudad">+</button>
+          </form>
+          <div id="citiesList" class="config-list"></div>
+        </div>
+      </div>
     </section>
-  </div>
+  </main>
 
-  <div id="addModal" class="modal" style="display: none;">
+  <div id="eventModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="eventModalTitle">
     <div class="modal-content">
-      <h2>Nuevo Registro de Evento</h2>
-      <form onsubmit="handleAddEvent(event)">
-        <div style="margin-bottom: 1rem;">
-          <label>Título</label>
-          <input type="text" id="addName" class="input" required>
+      <h2 id="eventModalTitle">Nuevo Evento</h2>
+      <form id="eventForm" novalidate>
+        <input type="hidden" id="eventId">
+        <div class="form-field">
+          <label for="eventName">Título</label>
+          <input type="text" id="eventName" class="input" maxlength="80" required>
         </div>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-          <div>
-            <label>Ubicación</label>
-            <select id="addCity" class="select" required></select>
-          </div>
-          <div>
-            <label>Categoría</label>
-            <select id="addCategory" class="select" required></select>
-          </div>
+        <div class="form-field">
+          <label for="eventDescription">Descripción</label>
+          <input type="text" id="eventDescription" class="input" maxlength="240">
         </div>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1rem;">
-          <div>
-            <label>Precio (Q)</label>
-            <input type="number" id="addPrice" class="input" step="0.01" required>
+        <div class="form-row">
+          <div class="form-field">
+            <label for="eventCity">Ubicación</label>
+            <select id="eventCity" class="select" required></select>
           </div>
-          <div>
-            <label>Tickets</label>
-            <input type="number" id="addTickets" class="input" required>
+          <div class="form-field">
+            <label for="eventCategory">Categoría</label>
+            <select id="eventCategory" class="select" required></select>
           </div>
         </div>
-        <div style="margin-top: 1rem;">
-          <label>URL Imagen</label>
-          <input type="url" id="addImageUrl" class="input" required>
+        <div class="form-row">
+          <div class="form-field">
+            <label for="eventDate">Fecha</label>
+            <input type="date" id="eventDate" class="input" required>
+          </div>
+          <div class="form-field">
+            <label for="eventTime">Hora</label>
+            <input type="time" id="eventTime" class="input" required>
+          </div>
         </div>
-        <div style="display: flex; gap: 1rem; margin-top: 2rem;">
-          <button type="submit" class="btn btn-primary" style="flex: 2;">Guardar</button>
-          <button type="button" class="btn btn-secondary" style="flex: 1;" onclick="closeAddModal()">Cancelar</button>
+        <div class="form-row">
+          <div class="form-field">
+            <label for="eventPrice">Precio (Q)</label>
+            <input type="number" id="eventPrice" class="input" min="0.01" step="0.01" required>
+          </div>
+          <div class="form-field">
+            <label for="eventTickets">Tickets disponibles</label>
+            <input type="number" id="eventTickets" class="input" min="0" step="1" required>
+          </div>
+        </div>
+        <div class="form-field">
+          <label for="eventImageUrl">URL de la imagen</label>
+          <input type="url" id="eventImageUrl" class="input" placeholder="https://..." required>
+        </div>
+        <p id="eventFormError" class="form-error hidden" role="alert"></p>
+        <div class="modal-actions">
+          <button type="submit" class="btn btn-primary modal-actions__main">Guardar</button>
+          <button type="button" id="cancelEventBtn" class="btn btn-secondary modal-actions__secondary">Cancelar</button>
         </div>
       </form>
     </div>
   </div>
 
-  <script src="JS/admin.js"></script>
+  <script src="JS/utils.js" defer></script>
+  <script src="JS/store.js" defer></script>
+  <script src="JS/admin.js" defer></script>
 </body>
 </html>

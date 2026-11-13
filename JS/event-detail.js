@@ -1,150 +1,135 @@
-let currentUser = null;
+/**
+ * Detalle de un evento y agregado al carrito.
+ */
+
+const currentUser = Store.requireAuth();
 let currentEvent = null;
 
-document.addEventListener('DOMContentLoaded', () => {
-    checkAuth();
-    loadEventDetail();
-});
-
-function checkAuth() {
-    const user = localStorage.getItem('currentUser');
-    if (!user) {
-        window.location.href = 'index.html';
-        return;
-    }
-    currentUser = JSON.parse(user);
-}
-
-async function loadEventDetail() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const eventId = urlParams.get('id');
-
-    if (!eventId) {
-        window.location.href = 'events.html';
-        return;
-    }
-
-    let events = JSON.parse(localStorage.getItem('events') || '[]');
-
-    if (events.length === 0) {
-        try {
-            const response = await fetch('data.json');
-            const data = await response.json();
-            events = data.defaultEvents;
-            localStorage.setItem('events', JSON.stringify(events));
-        } catch (error) {
-            console.error(error);
-        }
-    }
-
-    const event = events.find(e => e.id == eventId);
-
-    if (!event) {
-        showErrorState(eventId);
-        return;
-    }
-
-    currentEvent = event;
-    displayEventDetail(event);
+/** Boletos que todavía puede agregar este usuario (stock menos lo que ya tiene en el carrito). */
+function remainingForUser(event) {
+    return Math.max(0, event.availableTickets - Store.quantityInCart(currentUser.id, event.id));
 }
 
 function displayEventDetail(event) {
     const container = document.getElementById('eventDetail');
     const isSuspended = event.suspended === true;
+    const remaining = remainingForUser(event);
     const noStock = event.availableTickets <= 0;
+    const canBuy = !isSuspended && remaining > 0;
+    const inCart = Store.quantityInCart(currentUser.id, event.id);
+
+    let buttonText = 'Agregar al Carrito';
+    if (isSuspended) buttonText = 'No Disponible';
+    else if (noStock) buttonText = 'Agotado';
+    else if (remaining === 0) buttonText = 'Límite alcanzado';
 
     container.innerHTML = `
         <div class="detail-grid">
             <div class="image-section">
-                <img src="${event.imageUrl}" alt="${event.name}" 
-                     class="detail-image" 
-                     style="${isSuspended ? 'filter: grayscale(1); opacity: 0.7;' : ''}">
+                <img src="${escapeHtml(event.imageUrl)}" alt="${escapeHtml(event.name)}"
+                     class="detail-image ${isSuspended ? 'is-suspended' : ''}" data-fallback>
             </div>
-            
+
             <div class="info-section">
-                <div style="display: flex; gap: 10px; margin-bottom: 10px;">
-                    <span class="badge badge-purple">${event.category}</span>
+                <div class="badge-row">
+                    <span class="badge badge-purple">${escapeHtml(event.category)}</span>
                     ${isSuspended ? '<span class="badge badge-red">🚫 Suspendido</span>' : ''}
                     ${noStock && !isSuspended ? '<span class="badge badge-red">Agotado</span>' : ''}
                 </div>
-                
-                <h1 class="event-title">${event.name}</h1>
-                
+
+                <h1 class="event-title">${escapeHtml(event.name)}</h1>
+
                 <div class="detail-list">
-                    <p> <strong>Fecha:</strong> ${event.date}</p>
-                    <p> <strong>Hora:</strong> ${event.time || '19:00'}</p>
-                    <p> <strong>Ubicación:</strong> ${event.city}</p>
-                    <p> <strong>Disponibles:</strong> ${event.availableTickets} tickets</p>
+                    <p><strong>Fecha:</strong> ${formatDate(event.date)}</p>
+                    <p><strong>Hora:</strong> ${escapeHtml(event.time || '19:00')}</p>
+                    <p><strong>Ubicación:</strong> ${escapeHtml(event.city)}</p>
+                    <p><strong>Disponibles:</strong> ${Number(event.availableTickets)} tickets</p>
+                    ${inCart > 0 ? `<p><strong>En tu carrito:</strong> ${inCart}</p>` : ''}
                 </div>
 
-                <p class="event-description-full">${event.description || ''}</p>
+                <p class="event-description-full">${escapeHtml(event.description || '')}</p>
 
-                <div class="pricing-card" style="${isSuspended ? 'background: #f3f4f6; border-color: #d1d5db;' : ''}">
-                    <p class="price-large">Q${Number(event.price).toFixed(2)}</p>
-                    
+                <form id="purchaseForm" class="pricing-card ${isSuspended ? 'is-suspended' : ''}">
+                    <p class="price-large">${formatCurrency(event.price)}</p>
+
                     <div class="purchase-controls">
-                        <input type="number" id="purchaseQty" value="1" min="1" 
-                               max="${event.availableTickets}" 
-                               class="input" style="width: 80px" 
-                               ${(isSuspended || noStock) ? 'disabled' : ''}>
-                        
-                        <button class="btn ${isSuspended ? 'btn-secondary' : 'btn-primary'}" 
-                                onclick="addToCart()" 
-                                ${(isSuspended || noStock) ? 'disabled' : ''}>
-                            ${isSuspended ? 'No Disponible' : (noStock ? 'Agotado' : 'Agregar al Carrito')}
+                        <label for="purchaseQty" class="visually-hidden">Cantidad de boletos</label>
+                        <input type="number" id="purchaseQty" value="1" min="1" max="${Math.max(remaining, 1)}"
+                               class="input qty-input" ${canBuy ? '' : 'disabled'} required>
+                        <button type="submit" class="btn ${canBuy ? 'btn-primary' : 'btn-secondary'}" ${canBuy ? '' : 'disabled'}>
+                            ${buttonText}
                         </button>
                     </div>
-                    
-                    ${isSuspended ? 
-                        '<p style="color: #ef4444; font-size: 0.85rem; margin-top: 12px; font-weight: 600;">Este evento ha sido pausado por la administración.</p>' 
-                        : ''}
-                </div>
+
+                    ${isSuspended ? '<p class="suspended-note">Este evento ha sido pausado por la administración.</p>' : ''}
+                </form>
             </div>
         </div>
     `;
+
+    attachImageFallback(container);
+    document.getElementById('purchaseForm').addEventListener('submit', addToCart);
 }
 
-function addToCart() {
-    if (currentEvent.suspended) {
-        alert("Operación no permitida: El evento se encuentra suspendido.");
+function addToCart(e) {
+    e.preventDefault();
+
+    // Se vuelve a leer el evento por si el admin lo modificó mientras la página estaba abierta
+    const event = Store.findEvent(currentEvent.id);
+    if (!event || event.suspended) {
+        notify('Operación no permitida: el evento se encuentra suspendido.', 'error');
         return;
     }
 
-    const qtyInput = document.getElementById('purchaseQty');
-    const qty = parseInt(qtyInput.value);
-    
-    if (isNaN(qty) || qty <= 0) {
-        alert("Ingresa una cantidad válida.");
+    const qty = Number.parseInt(document.getElementById('purchaseQty').value, 10);
+    if (!Number.isInteger(qty) || qty <= 0) {
+        notify('Ingresa una cantidad válida.', 'error');
         return;
     }
 
-    if (qty > currentEvent.availableTickets) {
-        alert("No puedes comprar más tickets de los disponibles.");
+    // Se considera lo que el usuario YA tiene en el carrito (antes se podía superar el stock)
+    const remaining = remainingForUser(event);
+    if (qty > remaining) {
+        notify(`Solo puedes agregar ${remaining} boleto(s) más de este evento.`, 'error');
         return;
     }
 
-    let cart = JSON.parse(localStorage.getItem(`cart_${currentUser.id}`) || '[]');
-    const existingIndex = cart.findIndex(item => item.eventId === currentEvent.id);
-    
-    if (existingIndex > -1) {
-        cart[existingIndex].quantity += qty;
-    } else {
-        cart.push({
-            eventId: currentEvent.id,
-            quantity: qty
-        });
-    }
+    const cart = Store.getCart(currentUser.id);
+    const existing = cart.find(item => String(item.eventId) === String(event.id));
+    if (existing) existing.quantity += qty;
+    else cart.push({ eventId: event.id, quantity: qty });
 
-    localStorage.setItem(`cart_${currentUser.id}`, JSON.stringify(cart));
-    alert("Tickets agregados.");
+    Store.saveCart(currentUser.id, cart);
     window.location.href = 'cart.html';
 }
 
-function showErrorState(id) {
+function showErrorState() {
+    // El id viene de la URL: no se inserta en el HTML para evitar XSS
     document.getElementById('eventDetail').innerHTML = `
-        <div class="card" style="padding: 3rem; text-align: center;">
+        <div class="card not-found">
             <h2>Evento no encontrado</h2>
-            <p>El ID "${id}" no existe.</p>
-            <button class="btn btn-primary" onclick="window.location.href='events.html'">Volver</button>
+            <p>El evento que buscas no existe o fue eliminado.</p>
+            <a class="btn btn-primary" href="events.html">Volver</a>
         </div>`;
 }
+
+async function init() {
+    if (!currentUser) return;
+    const eventId = new URLSearchParams(window.location.search).get('id');
+    if (!eventId) {
+        window.location.replace('events.html');
+        return;
+    }
+
+    try {
+        await Store.init();
+    } catch (error) {
+        console.error(error);
+    }
+
+    currentEvent = Store.findEvent(eventId);
+    if (!currentEvent) showErrorState();
+    else displayEventDetail(currentEvent);
+}
+
+init();
