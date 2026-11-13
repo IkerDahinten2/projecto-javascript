@@ -3,16 +3,16 @@
     {
       "id": "1",
       "email": "admin@eventos.gt",
-      "password": "admin123",
       "name": "Administrador",
-      "role": "admin"
+      "role": "admin",
+      "passwordHash": "240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9"
     },
     {
       "id": "2",
       "email": "usuario@eventos.gt",
-      "password": "user123",
       "name": "Usuario de Prueba",
-      "role": "user"
+      "role": "user",
+      "passwordHash": "e606e38b0d8c19b24cf0ee3808183162ea7cd63ff7912dbb22b5e803286b4446"
     }
   ],
   "defaultEvents": [
@@ -96,7 +96,6 @@
     }
   ],
   "cities": [
-    "Todas",
     "Ciudad de Guatemala",
     "Antigua Guatemala",
     "Quetzaltenango",
@@ -104,7 +103,6 @@
     "Puerto San José"
   ],
   "categories": [
-    "Todas",
     "Rock",
     "Pop",
     "Jazz",
