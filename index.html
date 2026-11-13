@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Ticket-Mania</title>
+  <link rel="stylesheet" href="CSS/index.css">
+</head>
+
+<body>
+
+<div class="login-card">
+
+
+  <div class="left">
+    <h1>Welcome back!</h1>
+    <p>Descubre los mejores conciertos y eventos de Guatemala</p>
+  </div>
+
+  
+  <div class="right">
+
+    <h2 id="title">Iniciar Sesión</h2>
+
+    <div class="tabs">
+      <button class="tab active" onclick="login()">Iniciar</button>
+      <button class="tab" onclick="register()">Crear</button>
+    </div>
+
+
+    <form id="loginForm" onsubmit="handleLogin(event)">
+        <div class="form-group">
+          <label for="loginEmail">Correo Electrónico</label>
+          <input type="email" id="loginEmail" class="input" placeholder="correo@ejemplo.com" required>
+        </div>
+        <div class="form-group">
+          <label for="loginPassword">Contraseña</label>
+          <input type="password" id="loginPassword" class="input" placeholder="••••••••" required>
+        </div>
+        <button type="submit" class="btn btn-primary btn-full">
+          Iniciar Sesión
+        </button>
+        
+        <div class="info-box">
+          <p style="font-weight: 600; margin-bottom: 0.5rem;">
+            Cuentas de prueba:
+          </p>
+          <p><strong>Admin:</strong> admin@eventos.gt / admin123</p>
+          <p><strong>Usuario:</strong> usuario@eventos.gt / user123</p>
+        </div>
+      </form>
+
+
+    <form id="registerForm" class="hidden">
+      <input type="text" placeholder="Nombre completo">
+      <input type="email" placeholder="Correo electrónico">
+      <input type="password" placeholder="Contraseña">
+
+      <button type="submit" class="btn">Crear Cuenta</button>
+    </form>
+
+  </div>
+
+</div>
+<script src="JS/auth.js"></script>
+
+</body>
+</html>

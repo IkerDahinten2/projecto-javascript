@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Carrito - Sinfonía Guatemalteca</title>
+  <link rel="stylesheet" href="CSS/cart.css">
+</head>
+<body>
+
+  <div class="container" style="padding-top: 2rem; max-width: 800px;">
+    
+    <button type="button" class="btn btn-secondary" onclick="window.location.href='events.html'" style="margin-bottom: 1.5rem;">
+      Volver a eventos
+    </button>
+    
+    <div class="card">
+      <div style="padding: 1.5rem; border-bottom: 1px solid #f3f4f6;">
+        <h2 style="font-size: 1.25rem; font-weight: 700;">Tu Carrito</h2>
+        <p id="itemCount" style="color: #6b7280; font-size: 0.875rem;"></p>
+      </div>
+
+
+      <div id="cartItems"></div>
+
+
+      <div id="emptyCart" class="hidden" style="padding: 3rem; text-align: center;">
+        <p style="color: #6b7280; margin-bottom: 1rem;">Tu carrito está vacío</p>
+        <button type="button" class="btn btn-primary" onclick="window.location.href='events.html'">
+          Explorar Eventos
+        </button>
+      </div>
+
+
+      <div id="cartSummary" class="hidden" style="padding: 1.5rem; background: #f9fafb; border-top: 1px solid #f3f4f6;">
+        <div style="display: flex; justify-content: space-between; margin-bottom: 1.5rem;">
+          <span style="font-weight: 700;">Total a pagar:</span>
+          <span id="cartTotal" style="color: #9333ea; font-weight: 700; font-size: 1.25rem;">Q0.00</span>
+        </div>
+
+        <button type="button" class="btn btn-primary" style="width: 100%; padding: 1rem;" onclick="openPaymentModal()">
+          Proceder al Pago
+        </button>
+      </div>
+    </div>
+  </div>
+
+
+  <div id="paymentModal" class="payment-modal">
+    <div class="payment-content">
+      <h2 style="margin-bottom: 1.5rem; font-weight: 700;">Finalizar Compra</h2>
+
+      <form id="paymentForm" onsubmit="handleCheckout(event)">
+        <div class="form-grid">
+          <div class="full-width">
+            <label>Nombre en la Tarjeta</label>
+            <input type="text" name="cardName" class="input" required>
+          </div>
+          <div class="full-width">
+            <label>Número de Tarjeta</label>
+            <input type="text" name="cardNumber" class="input" maxlength="19" placeholder="0000 0000 0000 0000" required>
+          </div>
+          <div>
+            <label>DPI / NIT</label>
+            <input type="text" name="userId" class="input" required>
+          </div>
+          <div>
+            <label>Teléfono</label>
+            <input type="tel" name="userPhone" class="input" required>
+          </div>
+          <div class="full-width">
+            <label>Correo Electrónico</label>
+            <input type="email" name="userEmail" class="input" required>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+          <button type="submit" class="btn btn-primary" style="flex: 2;">Confirmar Pago</button>
+          <button type="button" class="btn btn-secondary" style="flex: 1;" onclick="closePaymentModal()">Cancelar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="JS/cart.js"></script>
+</body>
+</html>

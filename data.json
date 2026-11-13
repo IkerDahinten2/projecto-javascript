@@ -1,0 +1,115 @@
+{
+  "defaultUsers": [
+    {
+      "id": "1",
+      "email": "admin@eventos.gt",
+      "password": "admin123",
+      "name": "Administrador",
+      "role": "admin"
+    },
+    {
+      "id": "2",
+      "email": "usuario@eventos.gt",
+      "password": "user123",
+      "name": "Usuario de Prueba",
+      "role": "user"
+    }
+  ],
+  "defaultEvents": [
+    {
+      "id": "1",
+      "name": "Guate-Rock Fest 2026",
+      "description": "El escenario del Estadio Nacional vibrará con las mejores bandas de rock latino y nacional. ¡Una descarga de adrenalina pura!",
+      "date": "2026-04-15",
+      "time": "18:00",
+      "city": "Ciudad de Guatemala",
+      "category": "Rock",
+      "price": 450,
+      "imageUrl": "https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?w=800",
+      "availableTickets": 1200,
+      "suspended": false
+    },
+    {
+      "id": "2",
+      "name": "Noche de Gala: Marimba Sinfónica",
+      "description": "Una experiencia elegante en el Teatro Nacional. Disfruta de la mística del instrumento nacional fusionada con orquesta clásica.",
+      "date": "2026-05-20",
+      "time": "20:00",
+      "city": "Ciudad de Guatemala",
+      "category": "Tradicional",
+      "price": 275,
+      "imageUrl": "https://images.unsplash.com/photo-1514525253361-bee8718a74a2?w=800",
+      "availableTickets": 500,
+      "suspended": false
+    },
+    {
+      "id": "3",
+      "name": "Neon Atitlán Beats",
+      "description": "El festival electrónico más grande a orillas del lago. Escenarios flotantes, luces neón y los mejores DJs del mundo.",
+      "date": "2026-06-10",
+      "time": "21:00",
+      "city": "Panajachel",
+      "category": "Electrónica",
+      "price": 600,
+      "imageUrl": "https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=800",
+      "availableTickets": 2000,
+      "suspended": false
+    },
+    {
+      "id": "4",
+      "name": "Jazz & Wine en las Alturas",
+      "description": "Una velada sofisticada en Quetzaltenango. Degustación de vinos finos acompañada del mejor jazz contemporáneo.",
+      "date": "2026-07-05",
+      "time": "19:00",
+      "city": "Quetzaltenango",
+      "category": "Jazz",
+      "price": 350,
+      "imageUrl": "https://images.unsplash.com/photo-1415201364774-f6f0bb35f28f?w=800",
+      "availableTickets": 300,
+      "suspended": false
+    },
+    {
+      "id": "5",
+      "name": "Antigua Pop Experience",
+      "description": "Bajo las estrellas de las ruinas de Antigua, vive un concierto íntimo con los artistas pop del momento.",
+      "date": "2026-08-12",
+      "time": "19:30",
+      "city": "Antigua Guatemala",
+      "category": "Pop",
+      "price": 550,
+      "imageUrl": "https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?w=800",
+      "availableTickets": 800,
+      "suspended": false
+    },
+    {
+      "id": "6",
+      "name": "Pacífico Reggae Sunset",
+      "description": "Despide el sol con los pies en la arena. Música consciente, fogatas y el mejor ambiente de paz en el Puerto.",
+      "date": "2026-09-18",
+      "time": "16:30",
+      "city": "Puerto San José",
+      "category": "Reggae",
+      "price": 225,
+      "imageUrl": "https://images.unsplash.com/photo-1459749411177-042180ce673c?w=800",
+      "availableTickets": 1500,
+      "suspended": false
+    }
+  ],
+  "cities": [
+    "Todas",
+    "Ciudad de Guatemala",
+    "Antigua Guatemala",
+    "Quetzaltenango",
+    "Panajachel",
+    "Puerto San José"
+  ],
+  "categories": [
+    "Todas",
+    "Rock",
+    "Pop",
+    "Jazz",
+    "Electrónica",
+    "Reggae",
+    "Tradicional"
+  ]
+}
