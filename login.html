@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Iniciar sesión | Sinfonía Guatemalteca</title>
+  <link rel="stylesheet" href="CSS/common.css">
+  <link rel="stylesheet" href="CSS/index.css">
+</head>
+
+<body>
+
+<main class="login-card">
+
+  <section class="left">
+    <h1>¡Bienvenido de nuevo!</h1>
+    <p>Descubre los mejores conciertos y eventos de Guatemala</p>
+  </section>
+
+  <section class="right">
+
+    <h2 id="title">Iniciar Sesión</h2>
+
+    <div class="tabs" role="tablist">
+      <button type="button" class="tab active" role="tab" aria-selected="true" aria-controls="loginForm" data-tab="login">Iniciar</button>
+      <button type="button" class="tab" role="tab" aria-selected="false" aria-controls="registerForm" data-tab="register">Crear</button>
+    </div>
+
+    <form id="loginForm" novalidate>
+      <div class="form-group">
+        <label for="loginEmail">Correo electrónico</label>
+        <input type="email" id="loginEmail" placeholder="correo@ejemplo.com" autocomplete="email" required>
+      </div>
+      <div class="form-group">
+        <label for="loginPassword">Contraseña</label>
+        <input type="password" id="loginPassword" placeholder="••••••••" autocomplete="current-password" required>
+      </div>
+      <p id="loginError" class="form-error hidden" role="alert"></p>
+      <button type="submit" class="btn">Iniciar Sesión</button>
+    </form>
+
+    <form id="registerForm" class="hidden" novalidate>
+      <div class="form-group">
+        <label for="registerName">Nombre completo</label>
+        <input type="text" id="registerName" autocomplete="name" minlength="3" required>
+      </div>
+      <div class="form-group">
+        <label for="registerEmail">Correo electrónico</label>
+        <input type="email" id="registerEmail" autocomplete="email" required>
+      </div>
+      <div class="form-group">
+        <label for="registerPassword">Contraseña (mínimo 8 caracteres)</label>
+        <input type="password" id="registerPassword" autocomplete="new-password" minlength="8" required>
+      </div>
+      <p id="registerError" class="form-error hidden" role="alert"></p>
+      <button type="submit" class="btn">Crear Cuenta</button>
+    </form>
+
+    <p class="guest-link">
+      <a id="guestLink" href="events.html">Seguir sin iniciar sesión →</a>
+    </p>
+
+  </section>
+
+</main>
+
+<script src="JS/utils.js" defer></script>
+<script src="JS/store.js" defer></script>
+<script src="JS/auth.js" defer></script>
+
+</body>
+</html>
