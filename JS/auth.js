@@ -13,8 +13,23 @@ const loginForm = document.getElementById('loginForm');
 const registerForm = document.getElementById('registerForm');
 const title = document.getElementById('title');
 
-function redirectByRole(user) {
-    window.location.href = user.role === 'admin' ? 'admin.html' : 'events.html';
+/**
+ * Página a la que se vuelve después de iniciar sesión (?next=...).
+ * Solo se aceptan páginas locales del sitio para evitar redirecciones
+ * abiertas hacia otros dominios (p. ej. ?next=https://sitio-malicioso.com).
+ */
+function safeNextPage() {
+    const next = new URLSearchParams(window.location.search).get('next') || '';
+    return /^[a-z-]+\.html(\?[\w=&%-]*)?$/i.test(next) && !next.startsWith('login.html') ? next : null;
+}
+
+function redirectAfterLogin(user) {
+    const next = safeNextPage();
+    if (next === 'admin.html' && user.role !== 'admin') {
+        window.location.href = 'events.html';
+        return;
+    }
+    window.location.href = next || (user.role === 'admin' ? 'admin.html' : 'events.html');
 }
 
 function showError(elementId, message) {
@@ -64,7 +79,7 @@ async function handleLogin(event) {
     }
 
     Store.setSession(user);
-    redirectByRole(user);
+    redirectAfterLogin(user);
 }
 
 // ---------- Registro ----------
@@ -90,7 +105,12 @@ async function handleRegister(event) {
     };
     Store.addUser(user);
     Store.setSession(user);
-    redirectByRole(user);
+    redirectAfterLogin(user);
+}
+
+const nextPage = safeNextPage();
+if (nextPage && /^(events|event-detail)\.html/.test(nextPage)) {
+    document.getElementById('guestLink').href = nextPage;
 }
 
 loginForm.addEventListener('submit', handleLogin);
@@ -107,5 +127,5 @@ registerForm.addEventListener('submit', handleRegister);
     }
     // Si ya hay una sesión activa, no tiene sentido mostrar el login
     const session = Store.getSession();
-    if (session && session.id) redirectByRole(session);
+    if (session) redirectAfterLogin(session);
 })();

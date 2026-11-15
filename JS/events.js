@@ -1,8 +1,11 @@
 /**
- * Catálogo de eventos: carga, filtros y tarjetas.
+ * Catálogo de eventos: página principal del sitio.
+ * Se puede navegar sin iniciar sesión; la cuenta solo se pide para comprar.
  */
 
-const currentUser = Store.requireAuth();
+// Se leen después de Store.init(), que puede cerrar sesiones de usuarios retirados
+let currentUser = null; // null si es un visitante
+let isAdmin = false;
 let allEvents = [];
 
 const searchInput = document.getElementById('searchInput');
@@ -10,11 +13,18 @@ const cityFilter = document.getElementById('cityFilter');
 const categoryFilter = document.getElementById('categoryFilter');
 
 function renderHeader() {
-    document.getElementById('userName').textContent = currentUser.name || 'Usuario';
+    const show = (id, visible) => document.getElementById(id).classList.toggle('hidden', !visible);
 
-    if (currentUser.role === 'admin') {
+    show('loginBtn', !currentUser);
+    show('userInfo', !!currentUser);
+    show('cartBtn', !!currentUser);
+    show('logoutBtn', !!currentUser);
+    show('adminBtn', isAdmin);
+    if (!currentUser) return;
+
+    document.getElementById('userName').textContent = currentUser.name || 'Usuario';
+    if (isAdmin) {
         document.getElementById('userBadge').innerHTML = '<span class="badge badge-purple">★ Admin</span>';
-        document.getElementById('adminBtn').classList.remove('hidden');
     }
     document.getElementById('cartCount').textContent = Store.cartCount(currentUser.id);
 }
@@ -37,7 +47,7 @@ function filterEvents() {
 
     const filtered = allEvents.filter(event => {
         // Los eventos suspendidos solo los ve el administrador
-        if (event.suspended && currentUser.role !== 'admin') return false;
+        if (event.suspended && !isAdmin) return false;
 
         const text = `${event.name} ${event.description || ''}`.toLowerCase();
         return text.includes(searchTerm)
@@ -87,15 +97,17 @@ function displayEvents(events) {
 }
 
 function handleLogout() {
+    // El catálogo es público: al salir se queda en él como visitante
     Store.clearSession();
-    window.location.href = 'index.html';
+    window.location.reload();
 }
 
 async function init() {
-    if (!currentUser) return;
-    renderHeader();
     try {
         await Store.init();
+        currentUser = Store.getSession();
+        isAdmin = currentUser?.role === 'admin';
+        renderHeader();
         allEvents = Store.getEvents();
         populateFilterOptions();
         filterEvents();

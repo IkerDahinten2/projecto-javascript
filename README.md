@@ -12,6 +12,7 @@ Plataforma web para la **administración, visualización y compra de boletos** d
 ## Funcionalidades
 
 ### Módulo de usuario
+- **Catálogo como página principal y sesión opcional**: cualquier visitante puede ver los eventos y su detalle sin iniciar sesión. La cuenta solo se pide para comprar; después de iniciar sesión se vuelve a la página donde estaba.
 - **Inicio de sesión y registro** con validación de datos. Las contraseñas se guardan como hash SHA-256.
 - **Catálogo dinámico** con búsqueda y filtros por ciudad y categoría. Los eventos suspendidos solo los ve el administrador.
 - **Detalle de evento** con fecha, hora, ubicación y stock. No permite agregar más boletos de los disponibles, contando también los que ya están en el carrito.
@@ -38,8 +39,9 @@ Plataforma web para la **administración, visualización y compra de boletos** d
 
 ```
 projecto-javascript/
-├── index.html          # Inicio de sesión y registro
-├── events.html         # Catálogo de eventos
+├── index.html          # Redirige al catálogo (para servidores que abren index.html)
+├── events.html         # Catálogo de eventos: página principal
+├── login.html          # Inicio de sesión y registro (opcional)
 ├── event-detail.html   # Detalle de un evento
 ├── cart.html           # Carrito y checkout
 ├── admin.html          # Panel administrativo
@@ -67,14 +69,19 @@ cd projecto-javascript
 npx serve .
 ```
 
-O abre `index.html` con la extensión *Live Server* de VS Code.
+El sitio abre directamente el catálogo (`events.html`). También puedes usar la extensión *Live Server* de VS Code.
 
-### Usuarios de demostración
+### Cuentas
 
-| Rol | Correo | Contraseña |
-|-----|--------|------------|
-| Administrador | `admin@eventos.gt` | `admin123` |
-| Usuario | `usuario@eventos.gt` | `user123` |
+| Rol | Cómo obtenerla |
+|-----|----------------|
+| Visitante | No necesita cuenta: puede ver el catálogo y el detalle de los eventos |
+| Usuario | Créala desde **Iniciar sesión → Crear**; o usa la cuenta de prueba `cliente@sinfonia.gt` |
+| Administrador | Cuenta de prueba `admin@sinfonia.gt` |
+
+> Las contraseñas de las cuentas de prueba no se publican en el repositorio; pídeselas al autor.
+> Al actualizar desde una versión anterior, los usuarios de prueba antiguos se reemplazan automáticamente
+> y se conservan los eventos, las ventas y las cuentas registradas.
 
 Para el checkout puedes usar la tarjeta de prueba `4111 1111 1111 1111` con cualquier fecha de vencimiento futura.
 
@@ -92,6 +99,11 @@ Probado de punta a punta en el navegador:
 
 | Caso | Resultado |
 |------|-----------|
+| La raíz del sitio abre el catálogo; un visitante ve eventos y detalle sin iniciar sesión | ✅ |
+| Visitante que intenta comprar o abrir el carrito → login → vuelve a la misma página | ✅ |
+| `?next=https://...` no redirige fuera del sitio | ✅ |
+| Las credenciales de prueba anteriores ya no funcionan, incluso en navegadores con datos viejos | ✅ |
+| Al salir, se queda en el catálogo como visitante | ✅ |
 | Pestañas de login/registro, credenciales incorrectas, correo duplicado y contraseña corta | ✅ |
 | Registro guarda el usuario con hash y crea una sesión con `id` | ✅ |
 | Fechas mostradas en hora local (antes salían un día antes) | ✅ |

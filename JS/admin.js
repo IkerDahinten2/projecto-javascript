@@ -260,7 +260,7 @@ document.addEventListener('keydown', e => {
 });
 document.getElementById('logoutBtn').addEventListener('click', () => {
     Store.clearSession();
-    window.location.href = 'index.html';
+    window.location.href = 'events.html';
 });
 
 (async () => {

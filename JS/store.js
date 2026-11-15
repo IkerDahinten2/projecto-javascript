@@ -5,10 +5,14 @@
  * claves ni lógica. La primera vez que se abre cualquier página se cargan los
  * datos semilla de data.json (antes solo lo hacía el catálogo, y si el admin
  * entraba primero se perdían los eventos de ejemplo).
+ *
+ * El inicio de sesión es opcional: el catálogo y el detalle se pueden ver
+ * sin cuenta; solo el carrito y el panel administrativo la exigen.
  */
 const Store = (() => {
     const KEYS = {
         seeded: 'seeded',
+        seedVersion: 'seedVersion',
         users: 'users',
         events: 'events',
         cities: 'cities',
@@ -16,6 +20,17 @@ const Store = (() => {
         sales: 'sales',
         session: 'currentUser'
     };
+
+    /**
+     * Versión de los datos semilla. Si cambia (por ejemplo, al reemplazar los
+     * usuarios de prueba), los navegadores que ya tenían datos guardados
+     * actualizan los usuarios por defecto sin perder eventos ni ventas.
+     * Debe coincidir con "seedVersion" de data.json.
+     */
+    const SEED_VERSION = 2;
+
+    /** Usuarios de prueba de versiones anteriores, que ya no son válidos. */
+    const RETIRED_USER_IDS = ['1', '2'];
 
     /** Opción de filtro reservada: no es una ciudad/categoría real. */
     const ALL = 'Todas';
@@ -33,24 +48,58 @@ const Store = (() => {
         localStorage.setItem(key, JSON.stringify(value));
     }
 
-    /** Carga los datos semilla una sola vez. */
+    /** Carga los datos semilla la primera vez y migra datos de versiones anteriores. */
     async function init() {
-        if (read(KEYS.seeded, false)) return;
+        if (read(KEYS.seedVersion, 0) === SEED_VERSION) return;
+
         const response = await fetch('data.json');
         if (!response.ok) throw new Error(`No se pudo cargar data.json (${response.status})`);
         const data = await response.json();
 
-        write(KEYS.users, data.defaultUsers);
-        write(KEYS.events, data.defaultEvents);
-        write(KEYS.cities, data.cities.filter(c => c !== ALL));
-        write(KEYS.categories, data.categories.filter(c => c !== ALL));
-        write(KEYS.sales, []);
-        write(KEYS.seeded, true);
+        if (read(KEYS.seeded, false)) {
+            migrateUsers(data.defaultUsers);
+        } else {
+            write(KEYS.users, data.defaultUsers);
+            write(KEYS.events, data.defaultEvents);
+            write(KEYS.cities, data.cities.filter(c => c !== ALL));
+            write(KEYS.categories, data.categories.filter(c => c !== ALL));
+            write(KEYS.sales, []);
+            write(KEYS.seeded, true);
+        }
+        write(KEYS.seedVersion, SEED_VERSION);
+    }
+
+    /**
+     * Reemplaza los usuarios de prueba por los de data.json y conserva las
+     * cuentas que registró la gente. Si la sesión activa era de un usuario
+     * retirado, se cierra.
+     */
+    function migrateUsers(defaultUsers) {
+        const defaultIds = defaultUsers.map(u => u.id);
+        const defaultEmails = defaultUsers.map(u => u.email.toLowerCase());
+        const registered = read(KEYS.users, []).filter(u =>
+            !RETIRED_USER_IDS.includes(u.id)
+            && !defaultIds.includes(u.id)
+            && !defaultEmails.includes(u.email.toLowerCase())
+        );
+        write(KEYS.users, [...defaultUsers, ...registered]);
+
+        const session = read(KEYS.session, null);
+        if (session && RETIRED_USER_IDS.includes(session.id)) clearSession();
     }
 
     // ---------- Sesión ----------
+    /** Usuario con sesión iniciada, o null si es un visitante. */
     function getSession() {
-        return read(KEYS.session, null);
+        const session = read(KEYS.session, null);
+        return session && session.id ? session : null;
+    }
+
+    const isLoggedIn = () => getSession() !== null;
+
+    /** URL del login que, al iniciar sesión, regresa a la página indicada. */
+    function loginUrl(next = window.location.pathname.split('/').pop() + window.location.search) {
+        return `login.html?next=${encodeURIComponent(next || 'events.html')}`;
     }
 
     function setSession(user) {
@@ -64,13 +113,14 @@ const Store = (() => {
     }
 
     /**
-     * Protege una página: redirige al login si no hay sesión, o al catálogo
-     * si se requiere un rol que el usuario no tiene. Devuelve el usuario.
+     * Protege una página que exige cuenta (carrito, panel admin): redirige al
+     * login (y luego de vuelta aquí) si no hay sesión, o al catálogo si se
+     * requiere un rol que el usuario no tiene. Devuelve el usuario.
      */
     function requireAuth(role) {
         const user = getSession();
-        if (!user || !user.id) {
-            window.location.replace('index.html');
+        if (!user) {
+            window.location.replace(loginUrl());
             return null;
         }
         if (role && user.role !== role) {
@@ -123,7 +173,7 @@ const Store = (() => {
 
     return {
         ALL, init,
-        getSession, setSession, clearSession, requireAuth,
+        getSession, setSession, clearSession, isLoggedIn, loginUrl, requireAuth,
         getUsers, findUserByEmail, addUser,
         getEvents, saveEvents, findEvent,
         getCities, saveCities, getCategories, saveCategories,

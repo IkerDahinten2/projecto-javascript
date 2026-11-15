@@ -3,72 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ticket-Mania | Iniciar sesión</title>
-  <link rel="stylesheet" href="CSS/common.css">
-  <link rel="stylesheet" href="CSS/index.css">
+  <title>Sinfonía Guatemalteca</title>
+  <!-- La página principal es el catálogo de eventos (events.html).
+       Este archivo solo existe para que los servidores que abren index.html
+       por defecto lleven directo al catálogo. -->
+  <meta http-equiv="refresh" content="0; url=events.html">
+  <link rel="canonical" href="events.html">
+  <script>window.location.replace('events.html');</script>
 </head>
-
 <body>
-
-<main class="login-card">
-
-  <section class="left">
-    <h1>¡Bienvenido de nuevo!</h1>
-    <p>Descubre los mejores conciertos y eventos de Guatemala</p>
-  </section>
-
-  <section class="right">
-
-    <h2 id="title">Iniciar Sesión</h2>
-
-    <div class="tabs" role="tablist">
-      <button type="button" class="tab active" role="tab" aria-selected="true" aria-controls="loginForm" data-tab="login">Iniciar</button>
-      <button type="button" class="tab" role="tab" aria-selected="false" aria-controls="registerForm" data-tab="register">Crear</button>
-    </div>
-
-    <form id="loginForm" novalidate>
-      <div class="form-group">
-        <label for="loginEmail">Correo electrónico</label>
-        <input type="email" id="loginEmail" placeholder="correo@ejemplo.com" autocomplete="email" required>
-      </div>
-      <div class="form-group">
-        <label for="loginPassword">Contraseña</label>
-        <input type="password" id="loginPassword" placeholder="••••••••" autocomplete="current-password" required>
-      </div>
-      <p id="loginError" class="form-error hidden" role="alert"></p>
-      <button type="submit" class="btn">Iniciar Sesión</button>
-
-      <div class="info-box">
-        <p class="info-box__title">Cuentas de prueba:</p>
-        <p><strong>Admin:</strong> admin@eventos.gt / admin123</p>
-        <p><strong>Usuario:</strong> usuario@eventos.gt / user123</p>
-      </div>
-    </form>
-
-    <form id="registerForm" class="hidden" novalidate>
-      <div class="form-group">
-        <label for="registerName">Nombre completo</label>
-        <input type="text" id="registerName" autocomplete="name" minlength="3" required>
-      </div>
-      <div class="form-group">
-        <label for="registerEmail">Correo electrónico</label>
-        <input type="email" id="registerEmail" autocomplete="email" required>
-      </div>
-      <div class="form-group">
-        <label for="registerPassword">Contraseña (mínimo 8 caracteres)</label>
-        <input type="password" id="registerPassword" autocomplete="new-password" minlength="8" required>
-      </div>
-      <p id="registerError" class="form-error hidden" role="alert"></p>
-      <button type="submit" class="btn">Crear Cuenta</button>
-    </form>
-
-  </section>
-
-</main>
-
-<script src="JS/utils.js" defer></script>
-<script src="JS/store.js" defer></script>
-<script src="JS/auth.js" defer></script>
-
+  <p>Redirigiendo al <a href="events.html">catálogo de eventos</a>…</p>
 </body>
 </html>
