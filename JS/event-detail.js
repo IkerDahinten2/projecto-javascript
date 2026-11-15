@@ -1,13 +1,19 @@
 /**
  * Detalle de un evento y agregado al carrito.
+ * La página es pública; para agregar al carrito se pide iniciar sesión.
  */
 
-const currentUser = Store.requireAuth();
+let currentUser = null; // se lee después de Store.init(); null si es un visitante
 let currentEvent = null;
+
+/** Boletos de este evento que el usuario ya tiene en su carrito (0 para visitantes). */
+function inCartForUser(event) {
+    return currentUser ? Store.quantityInCart(currentUser.id, event.id) : 0;
+}
 
 /** Boletos que todavía puede agregar este usuario (stock menos lo que ya tiene en el carrito). */
 function remainingForUser(event) {
-    return Math.max(0, event.availableTickets - Store.quantityInCart(currentUser.id, event.id));
+    return Math.max(0, event.availableTickets - inCartForUser(event));
 }
 
 function displayEventDetail(event) {
@@ -16,12 +22,23 @@ function displayEventDetail(event) {
     const remaining = remainingForUser(event);
     const noStock = event.availableTickets <= 0;
     const canBuy = !isSuspended && remaining > 0;
-    const inCart = Store.quantityInCart(currentUser.id, event.id);
+    const inCart = inCartForUser(event);
+    const isGuest = !currentUser;
 
     let buttonText = 'Agregar al Carrito';
     if (isSuspended) buttonText = 'No Disponible';
     else if (noStock) buttonText = 'Agotado';
     else if (remaining === 0) buttonText = 'Límite alcanzado';
+
+    // Los visitantes ven el precio y la disponibilidad, pero deben iniciar sesión para comprar
+    const purchaseControls = isGuest && canBuy
+        ? `<a class="btn btn-primary" href="${escapeHtml(Store.loginUrl())}">Inicia sesión para comprar</a>`
+        : `<label for="purchaseQty" class="visually-hidden">Cantidad de boletos</label>
+                        <input type="number" id="purchaseQty" value="1" min="1" max="${Math.max(remaining, 1)}"
+                               class="input qty-input" ${canBuy ? '' : 'disabled'} required>
+                        <button type="submit" class="btn ${canBuy ? 'btn-primary' : 'btn-secondary'}" ${canBuy ? '' : 'disabled'}>
+                            ${buttonText}
+                        </button>`;
 
     container.innerHTML = `
         <div class="detail-grid">
@@ -53,12 +70,7 @@ function displayEventDetail(event) {
                     <p class="price-large">${formatCurrency(event.price)}</p>
 
                     <div class="purchase-controls">
-                        <label for="purchaseQty" class="visually-hidden">Cantidad de boletos</label>
-                        <input type="number" id="purchaseQty" value="1" min="1" max="${Math.max(remaining, 1)}"
-                               class="input qty-input" ${canBuy ? '' : 'disabled'} required>
-                        <button type="submit" class="btn ${canBuy ? 'btn-primary' : 'btn-secondary'}" ${canBuy ? '' : 'disabled'}>
-                            ${buttonText}
-                        </button>
+                        ${purchaseControls}
                     </div>
 
                     ${isSuspended ? '<p class="suspended-note">Este evento ha sido pausado por la administración.</p>' : ''}
@@ -73,6 +85,13 @@ function displayEventDetail(event) {
 
 function addToCart(e) {
     e.preventDefault();
+
+    // Por si la sesión se cerró en otra pestaña mientras la página estaba abierta
+    currentUser = Store.getSession();
+    if (!currentUser) {
+        window.location.href = Store.loginUrl();
+        return;
+    }
 
     // Se vuelve a leer el evento por si el admin lo modificó mientras la página estaba abierta
     const event = Store.findEvent(currentEvent.id);
@@ -114,7 +133,6 @@ function showErrorState() {
 }
 
 async function init() {
-    if (!currentUser) return;
     const eventId = new URLSearchParams(window.location.search).get('id');
     if (!eventId) {
         window.location.replace('events.html');
@@ -126,6 +144,7 @@ async function init() {
     } catch (error) {
         console.error(error);
     }
+    currentUser = Store.getSession();
 
     currentEvent = Store.findEvent(eventId);
     if (!currentEvent) showErrorState();
